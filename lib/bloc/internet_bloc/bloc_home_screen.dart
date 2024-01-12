@@ -16,18 +16,47 @@ class _BlocHomeScreenState extends State<BlocHomeScreen> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: BlocBuilder<InternetBloc, InternetState>(
-            builder: (context, state) {
-              if (state is InternetGainedState) {
-                return const Text("Connected");
-              } else if (state is InternetLostState) {
-                return const Text("Not Connected");
-              } else {
-                return const Text("Loading .....");
-              }
-            },
-          ),
-        ),
+            child: BlocConsumer<InternetBloc, InternetState>(
+          listener: (context, state) {
+            if (state is InternetGainedState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Internet connected"),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            } else if (state is InternetLostState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Internet Not connected"),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state is InternetGainedState) {
+              return const Text("Connected");
+            } else if (state is InternetLostState) {
+              return const Text("Not Connected");
+            } else {
+              return const Text("Loading .....");
+            }
+          },
+        )
+
+            // BlocBuilder<InternetBloc, InternetState>(
+            //   builder: (context, state) {
+            //     if (state is InternetGainedState) {
+            //       return const Text("Connected");
+            //     } else if (state is InternetLostState) {
+            //       return const Text("Not Connected");
+            //     } else {
+            //       return const Text("Loading .....");
+            //     }
+            //   },
+            // ),
+            ),
       ),
     );
   }
